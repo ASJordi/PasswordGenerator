@@ -1,10 +1,9 @@
 package dev.asjordi.view;
 
 import dev.asjordi.PasswordGenerator;
+import dev.asjordi.utils.ClipboardUtil;
+import dev.asjordi.utils.FileUtil;
 import dev.asjordi.utils.ImageUtil;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 
 /**
  *
@@ -455,11 +454,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCopyActionPerformed
         String content = txtPassword.getText();
-        if (!content.isBlank()) {
-            StringSelection stringSelection = new StringSelection(content);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        }
+        ClipboardUtil.copyToClipboard(content);
+        FileUtil.writePassword(content);
     }//GEN-LAST:event_btnCopyActionPerformed
 
     private void btnGenerateNewPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateNewPasswordActionPerformed
@@ -467,7 +463,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGenerateNewPasswordActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
-        // TODO add your handling code here:
+        HistoryFrame h = new HistoryFrame();
+        h.setLocationRelativeTo(null);
+        h.setVisible(true);
     }//GEN-LAST:event_btnHistoryActionPerformed
 
     private void rbPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPasswordActionPerformed
