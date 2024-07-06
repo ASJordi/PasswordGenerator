@@ -1,5 +1,7 @@
 package dev.asjordi;
 
+import dev.asjordi.view.MainFrame;
+
 /**
  *
  * @author Jordi <ejordi.ayala@gmail.com>
@@ -7,6 +9,8 @@ package dev.asjordi;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Password Generator");
+        MainFrame m = new MainFrame();
+        m.setLocationRelativeTo(null);
+        m.setVisible(true);
     }
 }
