@@ -3,6 +3,7 @@ package dev.asjordi.view;
 import dev.asjordi.utils.ClipboardUtil;
 import dev.asjordi.utils.FileUtil;
 import dev.asjordi.utils.ImageUtil;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -20,6 +21,7 @@ public class HistoryFrame extends javax.swing.JFrame {
     
     private void loadPasswords() {
         List<String> passwords = FileUtil.readAllPasswords();
+        Collections.reverse(passwords);
         DefaultListModel<String> model = new DefaultListModel<>();
         passwords.forEach(p -> model.addElement(p));
         jList.setModel(model);

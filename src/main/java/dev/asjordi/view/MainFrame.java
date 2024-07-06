@@ -1,6 +1,6 @@
 package dev.asjordi.view;
 
-import dev.asjordi.PasswordGenerator;
+import dev.asjordi.Generator;
 import dev.asjordi.utils.ClipboardUtil;
 import dev.asjordi.utils.FileUtil;
 import dev.asjordi.utils.ImageUtil;
@@ -20,10 +20,10 @@ public class MainFrame extends javax.swing.JFrame {
         this.setIconImage(ImageUtil.getIcon().getImage());
         rbPassword.setSelected(true);
         tabbedPane.setSelectedIndex(0);
-        lblMinLength.setText(String.valueOf(PasswordGenerator.MIN_LENGTH));
+        lblMinLength.setText(String.valueOf(Generator.MIN_LENGTH_PASSWORD));
         checkLower.setSelected(true);
-        String initialPassword = PasswordGenerator.generate(8, false, true, false, false, 0, 0);
-        txtPassword.setText(initialPassword);
+        String str = getNewPassword();
+        txtPassword.setText(str);
     }
 
     @SuppressWarnings("unchecked")
@@ -69,7 +69,7 @@ public class MainFrame extends javax.swing.JFrame {
         checkUpperPassphrase = new javax.swing.JCheckBox();
         jsLengthPassphrase = new javax.swing.JSpinner();
         txtSeparatorPassphrase = new javax.swing.JTextField();
-        checkLowerPassphrase = new javax.swing.JCheckBox();
+        checkNumberPassphrase = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generate Password");
@@ -338,7 +338,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel11.setText("Separador:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel12.setText("Mayúsculas:");
+        jLabel12.setText("Capitalizar:");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Incluir número:");
@@ -360,7 +360,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
                 .addGroup(panelPassphraseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(checkLowerPassphrase)
+                    .addComponent(checkNumberPassphrase)
                     .addComponent(checkUpperPassphrase)
                     .addComponent(txtSeparatorPassphrase)
                     .addComponent(jsLengthPassphrase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -381,7 +381,7 @@ public class MainFrame extends javax.swing.JFrame {
                                     .addGap(38, 38, 38))
                                 .addComponent(checkUpperPassphrase))
                             .addGap(38, 38, 38))
-                        .addComponent(checkLowerPassphrase))
+                        .addComponent(checkNumberPassphrase))
                     .addGroup(panelPassphraseLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
@@ -470,10 +470,14 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void rbPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPasswordActionPerformed
         tabbedPane.setSelectedIndex(0);
+        String str = getNewPassword();
+        txtPassword.setText(str);
     }//GEN-LAST:event_rbPasswordActionPerformed
 
     private void rbPassphraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPassphraseActionPerformed
        tabbedPane.setSelectedIndex(1);
+       String str = getNewPassword();
+       txtPassword.setText(str);
     }//GEN-LAST:event_rbPassphraseActionPerformed
 
     private void jsMinNumStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jsMinNumStateChanged
@@ -498,34 +502,46 @@ public class MainFrame extends javax.swing.JFrame {
 
     private String getNewPassword() {
         
-        int length = (int) jsLength.getValue();
-        boolean uppercase = checkUpper.isSelected();
-        boolean lowercase = checkLower.isSelected();
-        boolean numbers = checkNumbers.isSelected();
-        boolean symbols = checkSymbols.isSelected();
-        int totalNumbers = 0;
-        int totalSymbols = 0;
+        String password = "";
         
-        if (numbers) totalNumbers = (int) jsMinNum.getValue();
-        if (symbols) totalSymbols = (int) jsMinSymbols.getValue();
+        if (rbPassword.isSelected()) {
+            int length = (int) jsLength.getValue();
+            boolean uppercase = checkUpper.isSelected();
+            boolean lowercase = checkLower.isSelected();
+            boolean numbers = checkNumbers.isSelected();
+            boolean symbols = checkSymbols.isSelected();
+            int totalNumbers = 0;
+            int totalSymbols = 0;
+
+            if (numbers) totalNumbers = (int) jsMinNum.getValue();
+            if (symbols) totalSymbols = (int) jsMinSymbols.getValue();
+
+            if (uppercase == false && lowercase == false && numbers == false && symbols == false) {
+                lowercase = true;
+                checkLower.setSelected(true);
+            }
+
+            password = Generator.generatePassword(length, uppercase, lowercase, numbers, symbols, totalNumbers, totalSymbols);
         
-        if (uppercase == false && lowercase == false && numbers == false && symbols == false) {
-            lowercase = true;
-            checkLower.setSelected(true);
+        } else if (rbPassphrase.isSelected()) {
+            int length = (int) jsLengthPassphrase.getValue();
+            String separator = txtSeparatorPassphrase.getText();
+            boolean capitalize = checkUpperPassphrase.isSelected();
+            boolean includeNumber = checkNumberPassphrase.isSelected();
+            
+            password = Generator.generatePassphrase(length, separator, capitalize, includeNumber);
         }
-        
-        String password = PasswordGenerator.generate(length, uppercase, lowercase, numbers, symbols, totalNumbers, totalSymbols);
         
         return password;
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgOptions;
     private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnGenerateNewPassword;
     private javax.swing.JButton btnHistory;
     private javax.swing.JCheckBox checkLower;
-    private javax.swing.JCheckBox checkLowerPassphrase;
+    private javax.swing.JCheckBox checkNumberPassphrase;
     private javax.swing.JCheckBox checkNumbers;
     private javax.swing.JCheckBox checkSymbols;
     private javax.swing.JCheckBox checkUpper;
