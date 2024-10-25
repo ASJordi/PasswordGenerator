@@ -165,3 +165,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Data ###
+data.txt

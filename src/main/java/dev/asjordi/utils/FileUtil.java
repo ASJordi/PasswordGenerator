@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class FileUtil {
     private static final Path PATH = Paths.get("data.txt");
     
     public static void writePassword(String password) {
+        verifyFile();
         try (Writer w = new FileWriter(PATH.toFile(), true);
                 BufferedWriter bw = new BufferedWriter(w)) {
             bw.append(password).append("\n");
@@ -31,6 +34,7 @@ public class FileUtil {
     }
     
     public static List<String> readAllPasswords() {
+        verifyFile();
         List<String> list = new ArrayList<>();
         
         try (Reader r = new FileReader(PATH.toFile(), StandardCharsets.UTF_8);
@@ -44,6 +48,16 @@ public class FileUtil {
         }
         
         return list;
+    }
+    
+    private static void verifyFile() {
+        if (!Files.exists(PATH)) {
+            try {
+                Files.createFile(PATH);
+            } catch (IOException ex) {
+                throw new RuntimeException("Unable to create file");
+            }
+        }
     }
     
 }
