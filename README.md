@@ -24,6 +24,7 @@ This is a desktop application that generates a random password or passphrase bas
 * Java SE 21
 * Java Swing
 * Java IO
+* SLF4J
 
 ## Dependencies :package:
 

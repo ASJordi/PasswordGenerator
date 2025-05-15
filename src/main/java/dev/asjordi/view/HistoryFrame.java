@@ -6,25 +6,32 @@ import dev.asjordi.utils.ImageUtil;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jordi <ejordi.ayala@gmail.com>
  */
 public class HistoryFrame extends javax.swing.JFrame {
+    
+    private static final Logger logger = LoggerFactory.getLogger(HistoryFrame.class);
 
     public HistoryFrame() {
         initComponents();
+        logger.atDebug().log("Loading application icon.");
         this.setIconImage(ImageUtil.getIcon().getImage());
         loadPasswords();
     }
     
     private void loadPasswords() {
+        logger.atDebug().log("Loading stored passwords.");
         List<String> passwords = FileUtil.readAllPasswords();
         Collections.reverse(passwords);
         DefaultListModel<String> model = new DefaultListModel<>();
         passwords.forEach(p -> model.addElement(p));
         jList.setModel(model);
+        logger.atDebug().log("Passwords loaded successfully.");
     }
 
     @SuppressWarnings("unchecked")
@@ -83,6 +90,7 @@ public class HistoryFrame extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             int index = jList.locationToIndex(evt.getPoint());
             String item = jList.getModel().getElementAt(index);
+            logger.atDebug().log("Selected item {}", item);
             ClipboardUtil.copyToClipboard(item);
         }
     }//GEN-LAST:event_jListMouseClicked

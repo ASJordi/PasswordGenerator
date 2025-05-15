@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.datafaker.Faker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -12,6 +14,7 @@ import net.datafaker.Faker;
  */
 public class Generator {
     
+    private static final Logger logger = LoggerFactory.getLogger(Generator.class);
     private static final String UPPERCASE = "ABCDEFGJKLMNPRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBERS = "0123456789";
@@ -25,6 +28,17 @@ public class Generator {
     public static String generatePassword(int length, boolean uppercase, boolean lowercase, boolean numbers, boolean symbols, int minNumbers, int minSpecial) {
         
         if (length < MIN_LENGTH_PASSWORD) length = MIN_LENGTH_PASSWORD;
+        
+        logger.atDebug()
+                .setMessage("Generating password with length {}, uppercase -> {}, lowercase -> {}, numbers -> {}, symbols -> {}, min numbers = {}, min special = {}")
+                .addArgument(length)
+                .addArgument(uppercase)
+                .addArgument(lowercase)
+                .addArgument(numbers)
+                .addArgument(symbols)
+                .addArgument(minNumbers)
+                .addArgument(minSpecial)
+                .log();
         
         StringBuilder password = new StringBuilder();
         StringBuilder allowed = new StringBuilder();
@@ -50,6 +64,8 @@ public class Generator {
         Collections.shuffle(passwordChars);
         for (Character c : passwordChars) password.append(c);
         
+        logger.atDebug().log("Password generated correctly.");
+        
         return password.toString();
     }
     
@@ -57,6 +73,14 @@ public class Generator {
         
         if (length < MIN_LENGTH_PASSPHRASE) length = MIN_LENGTH_PASSPHRASE;
         if (separator.isBlank()) separator = DEFAULT_SEPARATOR;
+        
+        logger.atDebug()
+                .setMessage("Generating passphrase with length {}, separator -> {}, capitalize -> {}, include numbers -> {}")
+                .addArgument(length)
+                .addArgument(separator)
+                .addArgument(capitalize)
+                .addArgument(includeNumber)
+                .log();
         
         StringBuilder password = new StringBuilder();
         
@@ -75,6 +99,8 @@ public class Generator {
             if (capitalize) password.append(capitalizeWord(w)).append(separator);    
             else password.append(w).append(separator);
         }
+        
+        logger.atDebug().log("Passphrase generated correctly.");
         
         return password.toString().substring(0, password.length() - 1);
     }
